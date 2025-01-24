@@ -1,0 +1,29 @@
+{
+    "header": {
+        "title": "Bug Identifier - Professional Pest Control Solutions",
+        "description": "Upload a photo of any insect for instant identification.",
+        "secure": "Secure service powered by Google Vision AI",
+        "fileSize": "Max file size: 4MB",
+        "supportedFormats": "Supported formats: JPEG, PNG"
+    },
+    "analyzing": "Analyzing your image...",
+    "upload": "Drag & drop or click to upload",
+    "drop": "Drop your image here",
+    "errors": {
+        "notImage": "Please upload an image file",
+        "unidentified": "Could not identify insect species",
+        "generic": "Analysis failed. Please try again."
+    },
+    "results": {
+        "title": "Analysis Results",
+        "species": "Identified Species",
+        "confidence": "Confidence Level",
+        "serviceTitle": "Professional Extermination Service",
+        "serviceDesc": "Get expert pest control solutions tailored to your needs",
+        "serviceCTA": "Schedule Free Consultation →"
+    },
+    "footer": {
+        "service": "Secure service powered by Google Vision AI",
+        "privacy": "Privacy Policy"
+    }
+}

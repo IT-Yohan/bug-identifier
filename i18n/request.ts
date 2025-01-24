@@ -1,8 +1,13 @@
-import {NextRequest} from 'next/server';
+import {getRequestConfig} from 'next-intl/server';
+import {locales} from '../middleware';
 
-export const locales = ['en', 'fr'];
-export const defaultLocale = 'en';
-
-export function getRequestConfig(_request: NextRequest) {
-  return {locale: defaultLocale};
-}
+export default getRequestConfig(async ({locale}) => {
+  const messages = (await import(`../messages/${locale}/common.json`)).default;
+  
+  return {
+    messages: {
+      common: messages
+    },
+    timeZone: 'Europe/Paris'
+  };
+});

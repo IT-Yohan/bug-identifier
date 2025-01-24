@@ -1,0 +1,29 @@
+{
+    "header": {
+        "title": "Bug Identifier - Solutions Professionnelles de Désinsectisation",
+        "description": "Téléchargez une photo de tout insecte pour l'identifier instantanément.",
+        "secure": "Service sécurisé propulsé par Google Vision AI",
+        "fileSize": "Taille max : 4MB",
+        "supportedFormats": "Formats pris en charge : JPEG, PNG"
+    },
+    "analyzing": "Analyse de votre image...",
+    "upload": "Glissez & déposez ou cliquez pour téléverser",
+    "drop": "Déposez votre image ici",
+    "errors": {
+        "notImage": "Veuillez téléverser un fichier image",
+        "unidentified": "Impossible d'identifier l'espèce",
+        "generic": "L'analyse a échoué. Veuillez réessayer."
+    },
+    "results": {
+        "title": "Résultats de l'Analyse",
+        "species": "Espèce Identifiée",
+        "confidence": "Niveau de Confiance",
+        "serviceTitle": "Service Professionnel de Désinsectisation",
+        "serviceDesc": "Obtenez des solutions expertes adaptées à vos besoins",
+        "serviceCTA": "Planifier une Consultation Gratuite →"
+    },
+    "footer": {
+        "service": "Service sécurisé propulsé par Google Vision AI",
+        "privacy": "Politique de Confidentialité"
+    }
+}
