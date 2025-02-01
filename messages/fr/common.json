@@ -1,29 +1,30 @@
 {
     "header": {
-        "title": "Bug Identifier - Solutions Professionnelles de Désinsectisation",
-        "description": "Téléchargez une photo de tout insecte pour l'identifier instantanément.",
-        "secure": "Service sécurisé propulsé par Google Vision AI",
-        "fileSize": "Taille max : 4MB",
-        "supportedFormats": "Formats pris en charge : JPEG, PNG"
-    },
-    "analyzing": "Analyse de votre image...",
-    "upload": "Glissez & déposez ou cliquez pour téléverser",
-    "drop": "Déposez votre image ici",
-    "errors": {
-        "notImage": "Veuillez téléverser un fichier image",
-        "unidentified": "Impossible d'identifier l'espèce",
-        "generic": "L'analyse a échoué. Veuillez réessayer."
+        "title": "Identificateur de nuisibles",
+        "description": "Téléchargez une image d'un insecte pour l'identification.",
+        "secure": "Sûr et privé",
+        "fileSize": "Taille maximale de fichier : 4 Mo",
+        "supportedFormats": "Formats supportés : .jpeg, .jpg, .png"
     },
     "results": {
-        "title": "Résultats de l'Analyse",
-        "species": "Espèce Identifiée",
-        "confidence": "Niveau de Confiance",
-        "serviceTitle": "Service Professionnel de Désinsectisation",
-        "serviceDesc": "Obtenez des solutions expertes adaptées à vos besoins",
-        "serviceCTA": "Planifier une Consultation Gratuite →"
+        "title": "Résultats de l'analyse",
+        "imageAlt": "Image de {species}",
+        "species": "Espèce",
+        "confidence": "Confiance",
+        "serviceTitle": "Obtenez un service professionnel",
+        "serviceDesc": "Contactez nos experts pour un contrôle optimal des nuisibles.",
+        "serviceCTA": "Contactez-nous"
     },
     "footer": {
-        "service": "Service sécurisé propulsé par Google Vision AI",
-        "privacy": "Politique de Confidentialité"
+        "service": "Service de contrôle des nuisibles professionnel",
+        "privacy": "Politique de confidentialité"
+    },
+    "analyzing": "Analyse de l'image en cours…",
+    "drop": "Déposez l'image ici…",
+    "upload": "Cliquez ou faites glisser une image pour télécharger",
+    "errors": {
+        "notImage": "Le fichier sélectionné n'est pas une image.",
+        "unidentified": "Aucune espèce d'insecte détectée dans l'image.",
+        "generic": "Une erreur inattendue s'est produite. Veuillez réessayer."
     }
 }

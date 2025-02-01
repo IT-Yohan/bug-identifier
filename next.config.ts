@@ -4,7 +4,26 @@ const withNextIntl = createNextIntlPlugin();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Your existing Next.js config options can go here
+  reactStrictMode: true,
+  swcMinify: true,
+  productionBrowserSourceMaps: false,
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-Frame-Options',
+            value: 'SAMEORIGIN'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          }
+        ]
+      }
+    ];
+  }
 };
 
 export default withNextIntl(nextConfig);

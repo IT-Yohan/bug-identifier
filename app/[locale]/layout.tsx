@@ -32,12 +32,10 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
     }
 
     return (
-        <html lang={locale} suppressHydrationWarning>
-            <body className={inter.className}>
-                <LocaleProvider locale={locale} messages={messages}>
-                    {children}
-                </LocaleProvider>
-            </body>
-        </html>
+        <LocaleProvider locale={locale} messages={messages}>
+            <div className={inter.className}>
+                {children}
+            </div>
+        </LocaleProvider>
     );
 }
