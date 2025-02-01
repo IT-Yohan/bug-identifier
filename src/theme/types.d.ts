@@ -1,13 +1,40 @@
-declare module '@/theme/types' {
-  export interface ThemeTokens {
-    colors: {
-      primary: Record<50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900, string>
-      surface: Record<50 | 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900, string>
-    }
-    spacing: Record<'xs' | 'sm' | 'md' | 'lg' | 'xl', string>
-    radius: Record<'sm' | 'md' | 'lg', string>
-  }
-  
-  const tokens: ThemeTokens;
-  export default tokens;
+export interface ThemeTokens {
+  colors: {
+    primary: {
+      "50": string;
+      "100": string;
+      "200": string;
+      "300": string;
+      "400": string;
+      "500": string;
+      "600": string;
+      "700": string;
+      "800": string;
+      "900": string;
+    };
+    surface: {
+      "50": string;
+      "100": string;
+      "200": string;
+      "300": string;
+      "400": string;
+      "500": string;
+      "600": string;
+      "700": string;
+      "800": string;
+      "900": string;
+    };
+  };
+  spacing: {
+    xs: string;
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+  };
+  radius: {
+    sm: string;
+    md: string;
+    lg: string;
+  };
 }
