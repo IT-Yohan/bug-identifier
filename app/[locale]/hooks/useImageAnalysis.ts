@@ -9,6 +9,11 @@ export interface AnalysisResult {
   redirectUrl: string;
   imageData: string;
 }
+export type AnalysisResponse = AnalysisResult | { errorMessage: string };
+
+function isErrorResponse(response: AnalysisResponse): response is { errorMessage: string } {
+  return (response as any).errorMessage !== undefined;
+}
 
 export function useImageAnalysis() {
   const t = useTranslations("common");
@@ -26,10 +31,18 @@ export function useImageAnalysis() {
       }
       const formData = new FormData();
       formData.append("file", file);
-      const response = await axios.post<AnalysisResult>("/api/analyze", formData);
-      setResult(response.data);
+      const response = await axios.post<AnalysisResponse>("/api/analyze", formData, { validateStatus: () => true });
+      if ('errorMessage' in response.data) {
+        setError(response.data.errorMessage);
+      } else {
+        setResult(response.data as AnalysisResult);
+      }
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("errors.generic"));
+      if (axios.isAxiosError(err) && err.response && err.response.data && err.response.data.errorMessage) {
+        setError(err.response.data.errorMessage);
+      } else {
+        setError(err instanceof Error ? err.message : t("errors.generic"));
+      }
     } finally {
       setLoading(false);
     }

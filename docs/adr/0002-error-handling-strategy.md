@@ -4,45 +4,16 @@
 Proposed
 
 ## Context
-Current implementation lacks:
-- Global error boundaries
-- Consistent API error responses
-- Client-side error recovery
-- Monitoring integration
+Given the scope of our Proof-of-Concept (POC) application, our error handling strategy is intentionally simplified. The current system does not require extensive error taxonomies, resilience patterns, or monitoring integrations that are common in production-grade systems.
 
 ## Decision
-Implement fault-tolerant error handling with:
-
-1. Error taxonomy:
-   - Class A: Critical (system failure)
-   - Class B: Recoverable (transient errors)
-   - Class C: Business logic (validation errors)
-   
-2. Error response format:
-   - RFC7807 compliance
-   - Extended with:
-     - error_code: "E1234"
-     - retry_after: 30000
-     - correlation_id
-     - docs_url
-
-3. Resilience patterns:
-   - Circuit breaker for API calls
-   - Exponential backoff retries
-   - Fallback data caching
-
-4. Security:
-   - Production error sanitization
-   - PII scrubbing filters
-   - Error rate limiting
-
-5. Observability:
-   - OpenTelemetry integration
-   - Error audit logs
-   - Weekly error budget reviews
+- Implement a global error boundary to catch all errors.
+- Log errors to the console for debugging purposes.
+- Display user-friendly error messages that do not expose technical details.
+- For 404 (not found) errors, show a customized message informing users that the page was not found.
+- Provide a "Try again" option to allow basic error recovery.
 
 ## Consequences
-- Error classification requires developer training
-- Circuit breakers add state management complexity
-- Audit logs require secure storage solution
-- Extended error format needs client updates
+- Simplified error handling reduces implementation and maintenance overhead.
+- Limited error classification and recovery strategies.
+- Not suitable for full-scale production without further enhancements.

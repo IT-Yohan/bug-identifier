@@ -1,45 +1,19 @@
 # 4. Component-Based Styling System
 
 ## Status
-Accepted
+Revised
 
 ## Context
-Current styling implementation has:
-- Inconsistent component variants
-- No design token management
-- Mix of CSS-in-JS and global styles
-- Missing dark mode implementation
+The current styling implementation is complex for a POC, with aspirations for an atomic design system, intricate token management, and advanced performance optimizations. For a POC, such complexity is not required, and a simpler, consistent styling approach is more appropriate.
 
 ## Decision
-Implement atomic design system with:
-
-1. Token architecture:
-   - Core tokens (colors, spacing, typography)
-   - Semantic tokens (theme-aware variables)
-   - Component tokens (component-specific overrides)
-   
-2. Theme management:
-   - ThemeProvider with React context
-   - TypeScript type generation from token JSON
-   - Figma sync via style dictionary
-
-3. Performance:
-   - Lightning CSS for minification
-   - Critical CSS extraction for SSR
-   - 50kb CSS budget per route
-
-4. Accessibility:
-   - Axe-core integration in Storybook
-   - Forced color mode compliance
-   - Reduced motion variants
-
-5. Development:
-   - CSS Modules with :where() selectivity
-   - Dev-only style inspector
-   - Visual regression testing
+Adopt a simplified styling system by:
+1. Utilizing Tailwind CSS for utility-first styling with a basic configuration.
+2. Defining a minimal set of design tokens (colors, spacing, typography) in a JSON file.
+3. Avoiding over-engineered solutions such as dynamic theme generation and Figma integration.
+4. Ensuring basic responsiveness and accessibility.
 
 ## Consequences
-- Token changes require design system versioning
-- Theming system adds runtime client-side JS
-- CSS compression requires Node 18+
-- Strict token types enable compile-time checks
+- Faster development and easier maintenance during the POC phase.
+- A simpler design system that can be extended in the future.
+- Limited styling customization until further requirements emerge.

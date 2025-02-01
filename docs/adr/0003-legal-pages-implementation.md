@@ -1,34 +1,18 @@
 # 3. Legal Pages Implementation
 
 ## Status
-Accepted
+Revised
 
 ## Context
-Production requirements mandate:
-- Terms of Service page
-- Privacy Policy page
-- Cookie Policy page
-Missing from current implementation
+For our Proof-of-Concept (POC) application, we require basic legal pages (Terms of Service, Privacy Policy, and Cookie Policy). The full production requirements, such as secure content management, versioning, dynamic PDF generation, and audit trails, are beyond the scope of the POC.
 
 ## Decision
-Implement legal pages with:
-1. Secure content management:
-   - Markdown stored in protected /content/legal directory
-   - Served through authenticated API routes
-2. Version control system:
-   - legal-versions.json tracking effective dates
-   - Semantic versioning (major.minor.patch)
-3. Automated PDF generation:
-   - Serverless function using Puppeteer
-   - Cached PDFs updated on content changes
-4. i18n integrity checks:
-   - Content hash verification across locales
-   - Missing translation alerts
-5. Audit trail:
-   - Change logging to dedicated database table
-   - Admin interface for version rollbacks
+Implement legal pages by:
+1. Storing static markdown files in the public/legal directory.
+2. Rendering legal content as static pages.
+3. Keeping the implementation simple without authentication, versioning, or automated PDF generation.
 
 ## Consequences
-- Requires legal content review process
-- Adds content update deployment dependency
-- Increases translation management overhead
+- Easier and faster implementation.
+- Limited flexibility in updating legal content dynamically.
+- Suitable for a POC; additional enhancements can be applied for a full production release.

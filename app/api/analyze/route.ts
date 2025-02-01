@@ -101,10 +101,10 @@ export async function POST(request: Request) {
     if (insectLabels.length === 0) {
       // Clean up temp file
       await unlink(filePath).catch((err) => console.error("Cleanup error:", err));
-      return NextResponse.json(
-        { error: "No insect species detected in the image" },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        identifiedAs: null,
+        errorMessage: "No insect species detected in the image. Please upload a clear image of an insect."
+      });
     }
 
     // Sort by confidence
