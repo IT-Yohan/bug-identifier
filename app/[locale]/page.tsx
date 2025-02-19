@@ -55,7 +55,7 @@ export default function Home() {
                 </div>
                 {error && (
                     <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
-                        {error}
+                        {t(error)}
                     </div>
                 )}
                 <div className="bg-white rounded-xl shadow-lg p-8 mb-12 transition-all hover:shadow-xl">

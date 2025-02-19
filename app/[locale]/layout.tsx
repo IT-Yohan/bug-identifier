@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 interface LayoutProps {
     children: ReactNode;
-    params: Promise<{ locale: string }>;
+    params: { locale: string };
 }
 
 export default async function LocaleLayout({ children, params }: LayoutProps) {
@@ -28,6 +28,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps) {
     try {
         messages = (await import(`../../messages/${locale}/common.json`)).default;
     } catch (error) {
+        console.error("Locale file not found:", locale, error);
         notFound();
     }
 

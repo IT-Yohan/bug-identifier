@@ -1,0 +1,1612 @@
+PROJECT CODE SNAPSHOT
+==================
+Root Directory: C:\workspace\bug-identifier
+Timestamp: 1739129703.9465232
+
+EXCLUDED FOLDERS (shown at root level only):
+- .git
+- .next
+- .vscode
+- __pycache__
+- build
+- coverage
+- dist
+- node_modules
+- venv
+
+EXCLUDED FILES (skipped even if they match text extensions):
+- Pipfile.lock
+- package-lock.json
+- pnpm-lock.yaml
+- poetry.lock
+- yarn.lock
+
+TEXT FILE TYPES PROCESSED:
+- .bat
+- .cfg
+- .conf
+- .css
+- .csv
+- .dockerfile
+- .env
+- .gitignore
+- .html
+- .ini
+- .js
+- .json
+- .jsx
+- .less
+- .md
+- .ps1
+- .py
+- .sass
+- .scss
+- .sh
+- .sql
+- .ts
+- .tsx
+- .txt
+- .vue
+- .xml
+- .yaml
+- .yml
+
+FORMAT GUIDE:
+- [SKIP] = folder contents not included
+- ///// = start of new file
+- Line numbers are added to help with code references
+
+==================
+
+<FILE TREE STRUCTURE>
+Project Structure Information:
+- Folders marked with [SKIP] are excluded from content processing
+- File paths are relative to the project root
+- Each file's content is preceded by ///// and its relative path
+
+  README.md
+  middleware.ts
+  next-env.d.ts
+  next-intl.config.ts
+  next.config.ts
+  package.json
+  tailwind.config.ts
+  tsconfig.json
+  .git/ [SKIP]
+  .next/ [SKIP]
+  app/
+      api/
+        analyze/
+          route.ts
+        uploadthing/
+          core.ts
+          route.ts
+      drag-drop/
+        page.tsx
+      [locale]/
+        LocaleProvider.tsx
+        error.tsx
+        layout.tsx
+        page.tsx
+        hooks/
+          useImageAnalysis.ts
+  content/
+      legal/
+        en/
+          terms-of-service.md
+        fr/
+          terms-of-service.md
+  docs/
+      adr/
+        0001-i18n-implementation.md
+        0002-error-handling-strategy.md
+        0003-legal-pages-implementation.md
+        0004-styling-system.md
+  i18n/
+  messages/
+      en/
+        common.json
+      fr/
+        common.json
+  node_modules/ [SKIP]
+  public/
+      legal/
+  src/
+      theme/
+        ThemeProvider.tsx
+        tokens.json
+        types.d.ts
+  temp/
+
+///// README.md
+FILE TYPE: .md
+RELATIVE PATH: README.md
+CONTENT:
+
+   1 | This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+   2 | 
+   3 | ## Getting Started
+   4 | 
+   5 | First, run the development server:
+   6 | 
+   7 | ```bash
+   8 | npm run dev
+   9 | # or
+  10 | yarn dev
+  11 | # or
+  12 | pnpm dev
+  13 | # or
+  14 | bun dev
+  15 | ```
+  16 | 
+  17 | Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+  18 | 
+  19 | You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+  20 | 
+  21 | This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+  22 | 
+  23 | ## Learn More
+  24 | 
+  25 | To learn more about Next.js, take a look at the following resources:
+  26 | 
+  27 | - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+  28 | - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+  29 | 
+  30 | You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+  31 | 
+  32 | ## Deploy on Vercel
+  33 | 
+  34 | The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+  35 | 
+  36 | Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+END OF FILE
+
+
+///// middleware.ts
+FILE TYPE: .ts
+RELATIVE PATH: middleware.ts
+CONTENT:
+
+   1 | import createMiddleware from 'next-intl/middleware';
+   2 | 
+   3 | export const locales = ['en', 'fr'] as const;
+   4 | export const defaultLocale = 'en';
+   5 | 
+   6 | export default createMiddleware({
+   7 |   locales: locales,
+   8 |   defaultLocale: defaultLocale,
+   9 |   localePrefix: 'always'
+  10 | });
+  11 | 
+  12 | // Use the new route segment config format
+  13 | export const config = {
+  14 |   // Skip all paths that should not be internationalized
+  15 |   matcher: ['/((?!api|_next|.*\\..*).*)']
+  16 | } satisfies { matcher: string[] };
+
+END OF FILE
+
+
+///// next-env.d.ts
+FILE TYPE: .ts
+RELATIVE PATH: next-env.d.ts
+CONTENT:
+
+   1 | /// <reference types="next" />
+   2 | /// <reference types="next/image-types/global" />
+   3 | 
+   4 | // NOTE: This file should not be edited
+   5 | // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+
+END OF FILE
+
+
+///// next-intl.config.ts
+FILE TYPE: .ts
+RELATIVE PATH: next-intl.config.ts
+CONTENT:
+
+   1 | import {getRequestConfig} from 'next-intl/server';
+   2 | 
+   3 | export default getRequestConfig(async ({locale}) => ({
+   4 |   messages: (await import(`./messages/${locale}/common.json`)).default,
+   5 |   timeZone: 'Europe/Paris',
+   6 |   now: new Date()
+   7 | }));
+
+END OF FILE
+
+
+///// next.config.ts
+FILE TYPE: .ts
+RELATIVE PATH: next.config.ts
+CONTENT:
+
+   1 | import createNextIntlPlugin from 'next-intl/plugin';
+   2 | 
+   3 | const withNextIntl = createNextIntlPlugin();
+   4 | 
+   5 | /** @type {import('next').NextConfig} */
+   6 | const nextConfig = {
+   7 |   reactStrictMode: true,
+   8 |   swcMinify: true,
+   9 |   productionBrowserSourceMaps: false,
+  10 |   async headers() {
+  11 |     return [
+  12 |       {
+  13 |         source: '/(.*)',
+  14 |         headers: [
+  15 |           {
+  16 |             key: 'X-Frame-Options',
+  17 |             value: 'SAMEORIGIN'
+  18 |           },
+  19 |           {
+  20 |             key: 'X-Content-Type-Options',
+  21 |             value: 'nosniff'
+  22 |           }
+  23 |         ]
+  24 |       }
+  25 |     ];
+  26 |   }
+  27 | };
+  28 | 
+  29 | export default withNextIntl(nextConfig);
+
+END OF FILE
+
+
+///// package.json
+FILE TYPE: .json
+RELATIVE PATH: package.json
+CONTENT:
+
+   1 | {
+   2 |   "name": "bug-identifier",
+   3 |   "version": "0.1.0",
+   4 |   "private": true,
+   5 |   "scripts": {
+   6 |     "dev": "next dev --turbopack",
+   7 |     "build": "next build",
+   8 |     "start": "next start",
+   9 |     "lint": "next lint"
+  10 |   },
+  11 |   "dependencies": {
+  12 |     "@radix-ui/react-dropdown-menu": "^2.1.5",
+  13 |     "@radix-ui/react-slot": "^1.1.1",
+  14 |     "@uploadthing/react": "^7.1.5",
+  15 |     "axios": "^1.7.9",
+  16 |     "clsx": "^2.1.1",
+  17 |     "i18next": "^24.2.1",
+  18 |     "lightningcss": "^1.29.1",
+  19 |     "lucide-react": "^0.474.0",
+  20 |     "next": "15.1.6",
+  21 |     "next-i18next": "^15.4.1",
+  22 |     "next-intl": "^3.26.3",
+  23 |     "puppeteer": "^24.1.1",
+  24 |     "react": "^19.0.0",
+  25 |     "react-dom": "^19.0.0",
+  26 |     "react-dropzone": "^14.3.5",
+  27 |     "react-i18next": "^15.4.0",
+  28 |     "tailwind-merge": "^2.6.0",
+  29 |     "uploadthing": "^7.4.4",
+  30 |     "zod": "^3.24.1"
+  31 |   },
+  32 |   "devDependencies": {
+  33 |     "@eslint/eslintrc": "^3",
+  34 |     "@types/node": "^20",
+  35 |     "@types/react": "^19",
+  36 |     "@types/react-dom": "^19",
+  37 |     "eslint": "^9",
+  38 |     "eslint-config-next": "15.1.6",
+  39 |     "postcss": "^8",
+  40 |     "tailwindcss": "^3.4.1",
+  41 |     "typescript": "^5"
+  42 |   }
+  43 | }
+
+END OF FILE
+
+
+///// tailwind.config.ts
+FILE TYPE: .ts
+RELATIVE PATH: tailwind.config.ts
+CONTENT:
+
+   1 | import type { Config } from "tailwindcss";
+   2 | 
+   3 | export default {
+   4 |   content: [
+   5 |     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+   6 |     "./components/**/*.{js,ts,jsx,tsx,mdx}",
+   7 |     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+   8 |   ],
+   9 |   theme: {
+  10 |     extend: {
+  11 |       colors: {
+  12 |         background: "var(--background)",
+  13 |         foreground: "var(--foreground)",
+  14 |       },
+  15 |     },
+  16 |   },
+  17 |   plugins: [],
+  18 | } satisfies Config;
+
+END OF FILE
+
+
+///// tsconfig.json
+FILE TYPE: .json
+RELATIVE PATH: tsconfig.json
+CONTENT:
+
+   1 | {
+   2 |   "compilerOptions": {
+   3 |     "target": "es5",
+   4 |     "lib": [
+   5 |       "dom",
+   6 |       "dom.iterable",
+   7 |       "esnext"
+   8 |     ],
+   9 |     "allowJs": true,
+  10 |     "skipLibCheck": true,
+  11 |     "strict": true,
+  12 |     "forceConsistentCasingInFileNames": true,
+  13 |     "noEmit": true,
+  14 |     "esModuleInterop": true,
+  15 |     "module": "esnext",
+  16 |     "moduleResolution": "node",
+  17 |     "resolveJsonModule": true,
+  18 |     "isolatedModules": true,
+  19 |     "jsx": "preserve",
+  20 |     "baseUrl": ".",
+  21 |     "paths": {
+  22 |       "src/*": [
+  23 |         "src/*"
+  24 |       ]
+  25 |     },
+  26 |     "incremental": true,
+  27 |     "plugins": [
+  28 |       {
+  29 |         "name": "next"
+  30 |       }
+  31 |     ]
+  32 |   },
+  33 |   "include": [
+  34 |     "**/*.ts",
+  35 |     "**/*.tsx",
+  36 |     "next-env.d.ts",
+  37 |     ".next/types/**/*.ts"
+  38 |   ],
+  39 |   "exclude": [
+  40 |     "node_modules"
+  41 |   ]
+  42 | }
+
+END OF FILE
+
+
+///// app\globals.css
+FILE TYPE: .css
+RELATIVE PATH: app\globals.css
+CONTENT:
+
+   1 | @tailwind base;
+   2 | @tailwind components;
+   3 | @tailwind utilities;
+   4 | 
+   5 | :root {
+   6 |   --foreground-rgb: 0, 0, 0;
+   7 |   --background-start-rgb: 214, 219, 220;
+   8 |   --background-end-rgb: 255, 255, 255;
+   9 | }
+  10 | 
+  11 | @media (prefers-color-scheme: dark) {
+  12 |   :root {
+  13 |     --foreground-rgb: 255, 255, 255;
+  14 |     --background-start-rgb: 0, 0, 0;
+  15 |     --background-end-rgb: 0, 0, 0;
+  16 |   }
+  17 | }
+  18 | 
+  19 | @keyframes fade-in {
+  20 |   from {
+  21 |     opacity: 0;
+  22 |     transform: translateY(10px);
+  23 |   }
+  24 | 
+  25 |   to {
+  26 |     opacity: 1;
+  27 |     transform: translateY(0);
+  28 |   }
+  29 | }
+  30 | 
+  31 | .animate-fade-in {
+  32 |   animation: fade-in 0.3s ease-out forwards;
+  33 | }
+  34 | 
+  35 | /* Custom scrollbar */
+  36 | ::-webkit-scrollbar {
+  37 |   width: 8px;
+  38 | }
+  39 | 
+  40 | ::-webkit-scrollbar-track {
+  41 |   background: #f1f1f1;
+  42 |   border-radius: 4px;
+  43 | }
+  44 | 
+  45 | ::-webkit-scrollbar-thumb {
+  46 |   background: #888;
+  47 |   border-radius: 4px;
+  48 | }
+  49 | 
+  50 | ::-webkit-scrollbar-thumb:hover {
+  51 |   background: #666;
+  52 | }
+  53 | 
+  54 | /* Loading animation */
+  55 | @keyframes spin {
+  56 |   to {
+  57 |     transform: rotate(360deg);
+  58 |   }
+  59 | }
+  60 | 
+  61 | .animate-spin {
+  62 |   animation: spin 1s linear infinite;
+  63 | }
+  64 | 
+  65 | /* Hover effects */
+  66 | .hover\:shadow-xl:hover {
+  67 |   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  68 |   transition: box-shadow 0.3s ease-in-out;
+  69 | }
+  70 | 
+  71 | .hover\:bg-green-700:hover {
+  72 |   background-color: rgb(21 128 61);
+  73 |   transition: background-color 0.2s ease-in-out;
+  74 | }
+  75 | 
+  76 | /* Responsive design */
+  77 | @media (max-width: 640px) {
+  78 |   .text-4xl {
+  79 |     font-size: 2rem;
+  80 |   }
+  81 | 
+  82 |   .p-8 {
+  83 |     padding: 1.5rem;
+  84 |   }
+  85 | }
+  86 | 
+  87 | /* Focus styles */
+  88 | .focus\:outline-none:focus {
+  89 |   outline: none;
+  90 | }
+  91 | 
+  92 | .focus\:ring-2:focus {
+  93 |   --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+  94 |   --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+  95 |   box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+  96 | }
+  97 | 
+  98 | .focus\:ring-blue-500:focus {
+  99 |   --tw-ring-color: rgb(59 130 246);
+ 100 | }
+ 101 | 
+ 102 | /* Disabled styles */
+ 103 | .disabled\:opacity-50:disabled {
+ 104 |   opacity: 0.5;
+ 105 | }
+ 106 | 
+ 107 | .disabled\:cursor-not-allowed:disabled {
+ 108 |   cursor: not-allowed;
+ 109 | }
+
+END OF FILE
+
+
+///// app\layout.tsx
+FILE TYPE: .tsx
+RELATIVE PATH: app\layout.tsx
+CONTENT:
+
+   1 | import './globals.css'
+   2 | import { NextIntlClientProvider } from 'next-intl'
+   3 | import type { Metadata } from 'next'
+   4 | import { Inter } from 'next/font/google'
+   5 | import { ThemeProvider } from '../src/theme/ThemeProvider'
+   6 | 
+   7 | const inter = Inter({ subsets: ['latin'] })
+   8 | 
+   9 | export const metadata: Metadata = {
+  10 |   title: 'Bug Identifier - Professional Pest Control Solutions',
+  11 |   description: 'Upload a photo of any insect or pest for instant identification and get professional pest control recommendations.',
+  12 |   keywords: 'pest control, bug identification, insect identification, pest removal, extermination service',
+  13 |   openGraph: {
+  14 |     title: 'Bug Identifier - Professional Pest Control Solutions',
+  15 |     description: 'Upload a photo of any insect or pest for instant identification and get professional pest control recommendations.',
+  16 |     type: 'website',
+  17 |     locale: 'en_US',
+  18 |     siteName: 'Bug Identifier'
+  19 |   },
+  20 |   twitter: {
+  21 |     card: 'summary_large_image',
+  22 |     title: 'Bug Identifier - Professional Pest Control Solutions',
+  23 |     description: 'Upload a photo of any insect or pest for instant identification and get professional pest control recommendations.'
+  24 |   },
+  25 |   robots: {
+  26 |     index: true,
+  27 |     follow: true
+  28 |   },
+  29 | }
+  30 | 
+  31 | export const viewport = {
+  32 |   width: 'device-width',
+  33 |   initialScale: 1,
+  34 |   themeColor: '#ffffff'
+  35 | }
+  36 | 
+  37 | export default function RootLayout({
+  38 |   children,
+  39 | }: {
+  40 |   children: React.ReactNode
+  41 | }) {
+  42 |   return (
+  43 |     <html lang="en">
+  44 |       <body className={inter.className}>
+  45 |         <ThemeProvider>
+  46 |           <NextIntlClientProvider>
+  47 |             {children}
+  48 |           </NextIntlClientProvider>
+  49 |         </ThemeProvider>
+  50 |       </body>
+  51 |     </html>
+  52 |   )
+  53 | }
+
+END OF FILE
+
+
+///// app\page.tsx
+FILE TYPE: .tsx
+RELATIVE PATH: app\page.tsx
+CONTENT:
+
+   1 | import { redirect } from 'next/navigation';
+   2 | 
+   3 | export default function Page() {
+   4 |   redirect('/en');
+   5 | }
+
+END OF FILE
+
+
+///// app\api\analyze\route.ts
+FILE TYPE: .ts
+RELATIVE PATH: app\api\analyze\route.ts
+CONTENT:
+
+   1 | import { NextResponse } from "next/server";
+   2 | import axios from "axios";
+   3 | import { writeFile, mkdir, unlink } from 'fs/promises';
+   4 | import { join } from 'path';
+   5 | import { existsSync } from 'fs';
+   6 | 
+   7 | export async function POST(request: Request) {
+   8 |   // Get the language from Accept-Language header (e.g., "en-US" -> "en")
+   9 |   const acceptLanguage = request.headers.get('Accept-Language')?.split(',')[0] || 'en';
+  10 |   const language = acceptLanguage.split('-')[0];
+  11 | 
+  12 |   try {
+  13 |     const formData = await request.formData();
+  14 |     const file = formData.get('file') as File;
+  15 |     
+  16 |     if (!file) {
+  17 |       return NextResponse.json(
+  18 |         { error: "No image provided" },
+  19 |         { status: 400 }
+  20 |       );
+  21 |     }
+  22 | 
+  23 |     if (!file.type.startsWith('image/')) {
+  24 |       return NextResponse.json(
+  25 |         { error: "File must be an image" },
+  26 |         { status: 400 }
+  27 |       );
+  28 |     }
+  29 | 
+  30 |     // Convert file to buffer
+  31 |     const bytes = await file.arrayBuffer();
+  32 |     const buffer = Buffer.from(bytes);
+  33 | 
+  34 |     // Create temp directory if it doesn't exist
+  35 |     const tempPath = join(process.cwd(), 'temp');
+  36 |     if (!existsSync(tempPath)) {
+  37 |       await mkdir(tempPath, { recursive: true });
+  38 |     }
+  39 | 
+  40 |     const timestamp = Date.now();
+  41 |     const filePath = join(tempPath, `${timestamp}-${file.name}`);
+  42 |     await writeFile(filePath, buffer);
+  43 | 
+  44 |     // Convert image to base64
+  45 |     const imageBase64 = buffer.toString('base64');
+  46 | 
+  47 |     if (!process.env.GOOGLE_API_KEY) {
+  48 |       console.error("Google API key missing");
+  49 |       return NextResponse.json(
+  50 |         { error: "Service configuration error" },
+  51 |         { status: 500 }
+  52 |       );
+  53 |     }
+  54 | 
+  55 |     // 1) Call Google Vision API
+  56 |     const visionResponse = await axios.post(
+  57 |       `https://vision.googleapis.com/v1/images:annotate?key=${process.env.GOOGLE_API_KEY}`,
+  58 |       {
+  59 |         requests: [
+  60 |           {
+  61 |             image: { content: imageBase64 },
+  62 |             features: [
+  63 |               { type: "LABEL_DETECTION", maxResults: 20 },
+  64 |               { type: "WEB_DETECTION", maxResults: 20 }
+  65 |             ],
+  66 |             // languageHints tells Vision we prefer the given language,
+  67 |             // but it often returns English-based labels anyway.
+  68 |             imageContext: {
+  69 |               languageHints: [language]
+  70 |             }
+  71 |           }
+  72 |         ]
+  73 |       }
+  74 |     );
+  75 | 
+  76 |     // Process results
+  77 |     const labels = visionResponse.data.responses[0]?.labelAnnotations || [];
+  78 |     const webEntities = visionResponse.data.responses[0]?.webDetection?.webEntities || [];
+  79 | 
+  80 |     // Filter for specific insects, ignoring generic "insect", "bug"
+  81 |     const insectLabels = [...labels, ...webEntities].filter((label: any) => {
+  82 |       const description = label.description.toLowerCase();
+  83 |       if (["insect", "bug", "pest"].includes(description)) {
+  84 |         return false;
+  85 |       }
+  86 |       return (
+  87 |         description.includes('beetle') ||
+  88 |         description.includes('ant') ||
+  89 |         description.includes('spider') ||
+  90 |         description.includes('roach') ||
+  91 |         description.includes('wasp') ||
+  92 |         description.includes('bee') ||
+  93 |         description.includes('moth') ||
+  94 |         description.includes('fly') ||
+  95 |         description.includes('cricket') ||
+  96 |         description.includes('termite') ||
+  97 |         description.includes('tick')
+  98 |       );
+  99 |     });
+ 100 | 
+ 101 |     if (insectLabels.length === 0) {
+ 102 |       // Clean up temp file
+ 103 |       await unlink(filePath).catch((err) => console.error("Cleanup error:", err));
+ 104 |       return NextResponse.json({
+ 105 |         identifiedAs: null,
+ 106 |         errorMessage: "No insect species detected in the image. Please upload a clear image of an insect."
+ 107 |       });
+ 108 |     }
+ 109 | 
+ 110 |     // Sort by confidence
+ 111 |     const bestMatch = insectLabels.sort(
+ 112 |       (a: any, b: any) => (b.score || b.confidence) - (a.score || a.confidence)
+ 113 |     )[0];
+ 114 | 
+ 115 |     const confidence = Math.min(Math.max(bestMatch.score || bestMatch.confidence || 0, 0), 1);
+ 116 | 
+ 117 |     // 2) Translate the bestMatch description if needed
+ 118 |     let originalDescription = bestMatch.description;
+ 119 |     let localizedDescription = originalDescription;
+ 120 | 
+ 121 |     // Only do translation if the user wants a language other than English
+ 122 |     // (or adapt logic to your needs).
+ 123 |     if (language !== "en") {
+ 124 |       try {
+ 125 |         const translationResponse = await axios.post(
+ 126 |           `https://translation.googleapis.com/language/translate/v2?key=${process.env.GOOGLE_API_KEY}`,
+ 127 |           {
+ 128 |             q: originalDescription,
+ 129 |             target: language
+ 130 |           }
+ 131 |         );
+ 132 |         localizedDescription = translationResponse.data.data.translations[0].translatedText;
+ 133 |       } catch (err) {
+ 134 |         console.error("Translation error:", err);
+ 135 |         // Fallback to originalDescription if translation fails
+ 136 |       }
+ 137 |     }
+ 138 | 
+ 139 |     // Clean up the temporary file
+ 140 |     await unlink(filePath).catch((err) =>
+ 141 |       console.error("Error cleaning up temporary file:", err)
+ 142 |     );
+ 143 | 
+ 144 |     return NextResponse.json({
+ 145 |       identifiedAs: localizedDescription,
+ 146 |       confidence: confidence,
+ 147 |       redirectUrl: `${
+ 148 |         process.env.BUSINESS_URL || "https://example.com"
+ 149 |       }/devis-et-prix?species=${encodeURIComponent(originalDescription)}`,
+ 150 |       imageData: `data:${file.type};base64,${imageBase64}`
+ 151 |     });
+ 152 |   } catch (error) {
+ 153 |     console.error("Analysis error:", error);
+ 154 |     return NextResponse.json(
+ 155 |       { error: "Analysis failed. Please try again." },
+ 156 |       { status: 500 }
+ 157 |     );
+ 158 |   }
+ 159 | }
+
+END OF FILE
+
+
+///// app\api\uploadthing\core.ts
+FILE TYPE: .ts
+RELATIVE PATH: app\api\uploadthing\core.ts
+CONTENT:
+
+   1 | import { createUploadthing, type FileRouter } from "uploadthing/next";
+   2 | import { UploadThingError } from "uploadthing/server";
+   3 | 
+   4 | const f = createUploadthing();
+   5 | 
+   6 | export const ourFileRouter = {
+   7 |   imageUploader: f({
+   8 |     image: {
+   9 |       maxFileSize: "4MB",
+  10 |       maxFileCount: 1
+  11 |     }
+  12 |   })
+  13 |     .middleware(async () => {
+  14 |       return {};
+  15 |     })
+  16 |     .onUploadComplete(async ({ metadata, file }) => {
+  17 |       console.log("Upload complete for userId:", metadata);
+  18 |       console.log("File URL:", file.url);
+  19 |       return { url: file.url };
+  20 |     }),
+  21 | } satisfies FileRouter;
+  22 | 
+  23 | export type OurFileRouter = typeof ourFileRouter;
+
+END OF FILE
+
+
+///// app\api\uploadthing\route.ts
+FILE TYPE: .ts
+RELATIVE PATH: app\api\uploadthing\route.ts
+CONTENT:
+
+   1 | import { createRouteHandler } from "uploadthing/next";
+   2 | import { ourFileRouter } from "./core";
+   3 | 
+   4 | export const { GET, POST } = createRouteHandler({
+   5 |   router: ourFileRouter,
+   6 |   config: {
+   7 |     isDev: process.env.NODE_ENV === "development"
+   8 |   },
+   9 | });
+
+END OF FILE
+
+
+///// app\drag-drop\page.tsx
+FILE TYPE: .tsx
+RELATIVE PATH: app\drag-drop\page.tsx
+CONTENT:
+
+   1 | import React, { useState, DragEvent } from 'react';
+   2 | 
+   3 | export default function DragDropPage() {
+   4 |     const [isDragOver, setIsDragOver] = useState(false);
+   5 | 
+   6 |     const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+   7 |         event.preventDefault();
+   8 |         setIsDragOver(true);
+   9 |     };
+  10 | 
+  11 |     const handleDragLeave = () => {
+  12 |         setIsDragOver(false);
+  13 |     };
+  14 | 
+  15 |     const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+  16 |         event.preventDefault();
+  17 |         setIsDragOver(false);
+  18 |         // Additional drop handling logic can be added here.
+  19 |         console.log('Dropped files:', event.dataTransfer.files);
+  20 |     };
+  21 | 
+  22 |     return (
+  23 |         <div
+  24 |             className={`min-h-screen flex justify-center items-center ${isDragOver ? 'bg-gray-200' : 'bg-white'}`}
+  25 |             onDragOver={handleDragOver}
+  26 |             onDragLeave={handleDragLeave}
+  27 |             onDrop={handleDrop}
+  28 |         >
+  29 |             <div className="p-8 border-2 border-dashed border-gray-400 rounded-lg w-1/2 text-center">
+  30 |                 <h1 className="text-2xl font-bold mb-4">Drag & Drop Area</h1>
+  31 |                 <p>Drag files here for future integration.</p>
+  32 |             </div>
+  33 |         </div>
+  34 |     );
+  35 | }
+
+END OF FILE
+
+
+///// app\[locale]\LocaleProvider.tsx
+FILE TYPE: .tsx
+RELATIVE PATH: app\[locale]\LocaleProvider.tsx
+CONTENT:
+
+   1 | "use client";
+   2 | import { ReactNode } from 'react';
+   3 | import { NextIntlClientProvider } from 'next-intl';
+   4 | 
+   5 | export default function LocaleProvider({
+   6 |     children,
+   7 |     locale,
+   8 |     messages
+   9 | }: {
+  10 |     children: ReactNode;
+  11 |     locale: string;
+  12 |     messages: any;
+  13 | }) {
+  14 |     return (
+  15 |         <NextIntlClientProvider locale={locale} messages={{ common: messages }} timeZone="Europe/Paris">
+  16 |             {children}
+  17 |         </NextIntlClientProvider>
+  18 |     );
+  19 | }
+
+END OF FILE
+
+
+///// app\[locale]\error.tsx
+FILE TYPE: .tsx
+RELATIVE PATH: app\[locale]\error.tsx
+CONTENT:
+
+   1 | 'use client';
+   2 | 
+   3 | import { useEffect } from 'react';
+   4 | 
+   5 | export default function Error({
+   6 |     error,
+   7 |     reset,
+   8 | }: {
+   9 |     error: Error;
+  10 |     reset: () => void;
+  11 | }) {
+  12 |     useEffect(() => {
+  13 |         console.error(error);
+  14 |     }, [error]);
+  15 | 
+  16 |     const isNotFound = error.message.includes("404") || error.message.includes("Not Found");
+  17 | 
+  18 |     return (
+  19 |         <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 p-4">
+  20 |             <h2 className="text-3xl font-bold text-red-600 mb-4">
+  21 |                 {isNotFound ? "Page Not Found" : "Something went wrong."}
+  22 |             </h2>
+  23 |             <p className="text-lg text-gray-800 mb-4">
+  24 |                 {isNotFound
+  25 |                     ? "We could not find the page you are looking for. Please check the URL, or return to the homepage."
+  26 |                     : "An unexpected error has occurred. Please try refreshing the page or contact support if the problem persists."}
+  27 |             </p>
+  28 |             <button onClick={() => reset()} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+  29 |                 Try again
+  30 |             </button>
+  31 |         </div>
+  32 |     );
+  33 | }
+
+END OF FILE
+
+
+///// app\[locale]\layout.tsx
+FILE TYPE: .tsx
+RELATIVE PATH: app\[locale]\layout.tsx
+CONTENT:
+
+   1 | import { notFound } from 'next/navigation';
+   2 | import { Inter } from 'next/font/google';
+   3 | import { ReactNode } from 'react';
+   4 | import { locales } from '../../middleware';
+   5 | import LocaleProvider from './LocaleProvider';
+   6 | 
+   7 | export const dynamic = 'force-dynamic';
+   8 | export const dynamicParams = true;
+   9 | export const revalidate = 0;
+  10 | export const fetchCache = 'force-no-store';
+  11 | export const runtime = 'nodejs';
+  12 | 
+  13 | const inter = Inter({ subsets: ['latin'] });
+  14 | 
+  15 | interface LayoutProps {
+  16 |     children: ReactNode;
+  17 |     params: Promise<{ locale: string }>;
+  18 | }
+  19 | 
+  20 | export default async function LocaleLayout({ children, params }: LayoutProps) {
+  21 |     const { locale } = await params;
+  22 | 
+  23 |     if (!locales.includes(locale as any)) {
+  24 |         notFound();
+  25 |     }
+  26 | 
+  27 |     let messages;
+  28 |     try {
+  29 |         messages = (await import(`../../messages/${locale}/common.json`)).default;
+  30 |     } catch (error) {
+  31 |         notFound();
+  32 |     }
+  33 | 
+  34 |     return (
+  35 |         <LocaleProvider locale={locale} messages={messages}>
+  36 |             <div className={inter.className}>
+  37 |                 {children}
+  38 |             </div>
+  39 |         </LocaleProvider>
+  40 |     );
+  41 | }
+
+END OF FILE
+
+
+///// app\[locale]\page.tsx
+FILE TYPE: .tsx
+RELATIVE PATH: app\[locale]\page.tsx
+CONTENT:
+
+   1 | "use client";
+   2 | import { useCallback } from "react";
+   3 | import { useTranslations } from "next-intl";
+   4 | import { useDropzone } from "react-dropzone";
+   5 | import { useImageAnalysis } from "./hooks/useImageAnalysis";
+   6 | 
+   7 | export default function Home() {
+   8 |     const t = useTranslations("common");
+   9 |     const { result, loading, error, handleAnalysis } = useImageAnalysis();
+  10 | 
+  11 |     const onDrop = useCallback(
+  12 |         (acceptedFiles: File[]) => {
+  13 |             if (acceptedFiles.length > 0) {
+  14 |                 handleAnalysis(acceptedFiles);
+  15 |             }
+  16 |         },
+  17 |         [handleAnalysis]
+  18 |     );
+  19 | 
+  20 |     const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  21 |         onDrop,
+  22 |         accept: { "image/*": [".jpeg", ".jpg", ".png"] },
+  23 |         maxSize: 4 * 1024 * 1024,
+  24 |         maxFiles: 1,
+  25 |     });
+  26 | 
+  27 |     return (
+  28 |         <div className="min-h-screen bg-gradient-to-b from-green-50 to-blue-50 py-6 sm:py-12">
+  29 |             <header className="bg-white shadow">
+  30 |                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  31 |                     <div className="flex justify-between items-center py-4">
+  32 |                         <div className="text-2xl font-bold text-gray-800">
+  33 |                             {t("header.title")}
+  34 |                         </div>
+  35 |                         <nav>
+  36 |                             <a href="/privacy" className="text-gray-600 hover:text-gray-800">
+  37 |                                 {t("footer.privacy")}
+  38 |                             </a>
+  39 |                         </nav>
+  40 |                     </div>
+  41 |                 </div>
+  42 |             </header>
+  43 |             <main className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+  44 |                 <div className="text-center mb-12">
+  45 |                     <h1 className="text-4xl font-bold text-gray-900 mb-4">
+  46 |                         {t("header.title")}
+  47 |                     </h1>
+  48 |                     <p className="text-lg text-gray-600 mb-6">
+  49 |                         {t("header.description")}
+  50 |                     </p>
+  51 |                     <div className="flex justify-center gap-4 text-sm text-gray-500">
+  52 |                         <span>{t("header.secure")}</span>
+  53 |                         <span>{t("header.fileSize")}</span>
+  54 |                     </div>
+  55 |                 </div>
+  56 |                 {error && (
+  57 |                     <div className="mb-4 p-4 bg-red-100 text-red-700 rounded-md">
+  58 |                         {error}
+  59 |                     </div>
+  60 |                 )}
+  61 |                 <div className="bg-white rounded-xl shadow-lg p-8 mb-12 transition-all hover:shadow-xl">
+  62 |                     <div
+  63 |                         {...getRootProps()}
+  64 |                         className={[
+  65 |                             "border-2 border-dashed rounded-lg p-12 text-center cursor-pointer transition-colors",
+  66 |                             loading
+  67 |                                 ? "border-blue-500 bg-blue-50"
+  68 |                                 : error
+  69 |                                     ? "border-red-500 bg-red-50"
+  70 |                                     : isDragActive
+  71 |                                         ? "border-green-500 bg-green-50"
+  72 |                                         : "border-gray-300 hover:border-gray-400",
+  73 |                         ].join(" ")}
+  74 |                         aria-label="File upload dropzone"
+  75 |                     >
+  76 |                         <input {...getInputProps()} />
+  77 |                         <div className="space-y-4">
+  78 |                             {loading ? (
+  79 |                                 <div
+  80 |                                     className="flex flex-col items-center gap-2"
+  81 |                                     aria-live="polite"
+  82 |                                 >
+  83 |                                     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500"></div>
+  84 |                                     <p className="text-gray-600">{t("analyzing")}</p>
+  85 |                                 </div>
+  86 |                             ) : (
+  87 |                                 <>
+  88 |                                     <div className="flex justify-center">
+  89 |                                         <svg
+  90 |                                             className="w-12 h-12 text-gray-400"
+  91 |                                             fill="none"
+  92 |                                             stroke="currentColor"
+  93 |                                             viewBox="0 0 24 24"
+  94 |                                         >
+  95 |                                             <path
+  96 |                                                 strokeLinecap="round"
+  97 |                                                 strokeLinejoin="round"
+  98 |                                                 strokeWidth={2}
+  99 |                                                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+ 100 |                                             />
+ 101 |                                         </svg>
+ 102 |                                     </div>
+ 103 |                                     <p className="text-gray-600">
+ 104 |                                         {isDragActive ? t("drop") : t("upload")}
+ 105 |                                     </p>
+ 106 |                                     <p className="text-sm text-gray-500 mt-2">
+ 107 |                                         {t("header.supportedFormats")}
+ 108 |                                     </p>
+ 109 |                                 </>
+ 110 |                             )}
+ 111 |                         </div>
+ 112 |                     </div>
+ 113 |                 </div>
+ 114 |                 {result && (
+ 115 |                     <div className="bg-white rounded-xl shadow-lg p-8 animate-fade-in mb-12">
+ 116 |                         <h2 className="text-2xl font-semibold mb-6">
+ 117 |                             {t("results.title")}
+ 118 |                         </h2>
+ 119 |                         <div className="mb-8">
+ 120 |                             <div className="relative aspect-square w-full max-w-md mx-auto mb-8 rounded-lg overflow-hidden border border-gray-200">
+ 121 |                                 <img
+ 122 |                                     src={result.imageData}
+ 123 |                                     alt={t("results.imageAlt", { species: result.identifiedAs })}
+ 124 |                                     className="w-full h-full object-contain"
+ 125 |                                 />
+ 126 |                             </div>
+ 127 |                             <div className="space-y-4">
+ 128 |                                 <div>
+ 129 |                                     <label className="text-sm text-gray-500">
+ 130 |                                         {t("results.species")}
+ 131 |                                     </label>
+ 132 |                                     <p className="text-lg font-medium text-gray-900">
+ 133 |                                         {result.identifiedAs}
+ 134 |                                     </p>
+ 135 |                                 </div>
+ 136 |                                 <div>
+ 137 |                                     <label className="text-sm text-gray-500">
+ 138 |                                         {t("results.confidence")}
+ 139 |                                     </label>
+ 140 |                                     <p className="text-lg font-medium text-gray-900">
+ 141 |                                         {(result.confidence * 100).toFixed(1)}%
+ 142 |                                     </p>
+ 143 |                                 </div>
+ 144 |                             </div>
+ 145 |                         </div>
+ 146 |                         <div className="bg-blue-50 rounded-lg p-6 text-center">
+ 147 |                             <h3 className="text-lg font-semibold mb-4">
+ 148 |                                 {t("results.serviceTitle")}
+ 149 |                             </h3>
+ 150 |                             <p className="text-gray-600 mb-6">{t("results.serviceDesc")}</p>
+ 151 |                             <a
+ 152 |                                 href={result.redirectUrl}
+ 153 |                                 className="inline-block bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium"
+ 154 |                                 target="_blank"
+ 155 |                                 rel="noopener noreferrer"
+ 156 |                             >
+ 157 |                                 {t("results.serviceCTA")}
+ 158 |                             </a>
+ 159 |                         </div>
+ 160 |                     </div>
+ 161 |                 )}
+ 162 |                 <footer className="mt-16 text-center text-sm text-gray-500">
+ 163 |                     <p>
+ 164 |                         {t("footer.service")} •{" "}
+ 165 |                         <a href="/privacy" className="hover:underline ml-1">
+ 166 |                             {t("footer.privacy")}
+ 167 |                         </a>
+ 168 |                     </p>
+ 169 |                 </footer>
+ 170 |             </main>
+ 171 |         </div>
+ 172 |     );
+ 173 | }
+
+END OF FILE
+
+
+///// app\[locale]\hooks\useImageAnalysis.ts
+FILE TYPE: .ts
+RELATIVE PATH: app\[locale]\hooks\useImageAnalysis.ts
+CONTENT:
+
+   1 | "use client";
+   2 | import { useState, useCallback } from "react";
+   3 | import { useTranslations } from "next-intl";
+   4 | import axios from "axios";
+   5 | 
+   6 | export interface AnalysisResult {
+   7 |   identifiedAs: string;
+   8 |   confidence: number;
+   9 |   redirectUrl: string;
+  10 |   imageData: string;
+  11 | }
+  12 | export type AnalysisResponse = AnalysisResult | { errorMessage: string };
+  13 | 
+  14 | function isErrorResponse(response: AnalysisResponse): response is { errorMessage: string } {
+  15 |   return (response as any).errorMessage !== undefined;
+  16 | }
+  17 | 
+  18 | export function useImageAnalysis() {
+  19 |   const t = useTranslations("common");
+  20 |   const [result, setResult] = useState<AnalysisResult | null>(null);
+  21 |   const [loading, setLoading] = useState<boolean>(false);
+  22 |   const [error, setError] = useState<string | null>(null);
+  23 | 
+  24 |   const handleAnalysis = useCallback(async (files: File[]) => {
+  25 |     setLoading(true);
+  26 |     setError(null);
+  27 |     try {
+  28 |       const file = files[0];
+  29 |       if (!file.type.startsWith("image/")) {
+  30 |         throw new Error(t("errors.notImage"));
+  31 |       }
+  32 |       const formData = new FormData();
+  33 |       formData.append("file", file);
+  34 |       const response = await axios.post<AnalysisResponse>("/api/analyze", formData, { validateStatus: () => true });
+  35 |       if ('errorMessage' in response.data) {
+  36 |         setError(response.data.errorMessage);
+  37 |       } else {
+  38 |         setResult(response.data as AnalysisResult);
+  39 |       }
+  40 |     } catch (err) {
+  41 |       if (axios.isAxiosError(err) && err.response && err.response.data && err.response.data.errorMessage) {
+  42 |         setError(err.response.data.errorMessage);
+  43 |       } else {
+  44 |         setError(err instanceof Error ? err.message : t("errors.generic"));
+  45 |       }
+  46 |     } finally {
+  47 |       setLoading(false);
+  48 |     }
+  49 |   }, [t]);
+  50 | 
+  51 |   return { result, loading, error, handleAnalysis };
+  52 | }
+
+END OF FILE
+
+
+///// content\legal\en\terms-of-service.md
+FILE TYPE: .md
+RELATIVE PATH: content\legal\en\terms-of-service.md
+CONTENT:
+
+   1 | # Terms of Service
+   2 | 
+   3 | ## 1. Acceptance of Terms
+   4 | By accessing this website, you agree to be bound by these Terms of Service and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from using or accessing this site.
+   5 | 
+   6 | ## 2. Use License
+   7 | Permission is granted to temporarily download one copy of the materials on our website for personal, non-commercial transitory viewing only.
+   8 | 
+   9 | [Additional sections...]
+
+END OF FILE
+
+
+///// content\legal\fr\terms-of-service.md
+FILE TYPE: .md
+RELATIVE PATH: content\legal\fr\terms-of-service.md
+CONTENT:
+
+   1 | # Conditions d'utilisation
+   2 | 
+   3 | ## 1. Acceptation des conditions
+   4 | En accédant à ce site web, vous acceptez d'être lié par ces conditions d'utilisation et toutes les lois et réglementations applicables. Si vous n'êtes pas d'accord avec l'une de ces conditions, vous êtes interdit d'utiliser ou d'accéder à ce site.
+   5 | 
+   6 | ## 2. Licence d'utilisation
+   7 | L'autorisation est accordée pour télécharger temporairement une copie des documents sur notre site web pour un usage personnel et non commercial.
+   8 | 
+   9 | [Sections supplémentaires...]
+
+END OF FILE
+
+
+///// docs\adr\0001-i18n-implementation.md
+FILE TYPE: .md
+RELATIVE PATH: docs\adr\0001-i18n-implementation.md
+CONTENT:
+
+   1 | # 1. Internationalization Strategy
+   2 | 
+   3 | ## Status
+   4 | Accepted
+   5 | 
+   6 | ## Context
+   7 | The application currently supports English/French with next-intl but has:
+   8 | - Incomplete translation coverage
+   9 | - No error message localization
+  10 | - Hardcoded UI text in components
+  11 | 
+  12 | ## Decision
+  13 | Implement enterprise-grade i18n with:
+  14 | 
+  15 | 1. Advanced text handling:
+  16 |    - RTL/LTR detection and styling
+  17 |    - CLDR pluralization rules
+  18 |    - Gender-aware translations
+  19 |    
+  20 | 2. Performance optimizations:
+  21 |    - CDN-hosted locale bundles
+  22 |    - Tree-shakable translation modules
+  23 |    - Brotli compression for locale files
+  24 | 
+  25 | 3. Translation infrastructure:
+  26 |    - Translation Memory (TMX 1.4b)
+  27 |    - Machine translation fallback (DeepL API)
+  28 |    - Pseudolocalization testing
+  29 |    - In-context editing (CMS integration)
+  30 | 
+  31 | 4. Quality assurance:
+  32 |    - Lingui eslint rules
+  33 |    - Translation coverage reports
+  34 |    - Glossary term enforcement
+  35 | 
+  36 | ## Consequences
+  37 | - RTL support requires CSS logical properties
+  38 | - TM system needs 90% match threshold
+  39 | - CDN caching adds deployment complexity
+  40 | - Machine translation requires API key management
+
+END OF FILE
+
+
+///// docs\adr\0002-error-handling-strategy.md
+FILE TYPE: .md
+RELATIVE PATH: docs\adr\0002-error-handling-strategy.md
+CONTENT:
+
+   1 | # 2. Unified Error Handling
+   2 | 
+   3 | ## Status
+   4 | Proposed
+   5 | 
+   6 | ## Context
+   7 | Given the scope of our Proof-of-Concept (POC) application, our error handling strategy is intentionally simplified. The current system does not require extensive error taxonomies, resilience patterns, or monitoring integrations that are common in production-grade systems.
+   8 | 
+   9 | ## Decision
+  10 | - Implement a global error boundary to catch all errors.
+  11 | - Log errors to the console for debugging purposes.
+  12 | - Display user-friendly error messages that do not expose technical details.
+  13 | - For 404 (not found) errors, show a customized message informing users that the page was not found.
+  14 | - Provide a "Try again" option to allow basic error recovery.
+  15 | 
+  16 | ## Consequences
+  17 | - Simplified error handling reduces implementation and maintenance overhead.
+  18 | - Limited error classification and recovery strategies.
+  19 | - Not suitable for full-scale production without further enhancements.
+
+END OF FILE
+
+
+///// docs\adr\0003-legal-pages-implementation.md
+FILE TYPE: .md
+RELATIVE PATH: docs\adr\0003-legal-pages-implementation.md
+CONTENT:
+
+   1 | # 3. Legal Pages Implementation
+   2 | 
+   3 | ## Status
+   4 | Revised
+   5 | 
+   6 | ## Context
+   7 | For our Proof-of-Concept (POC) application, we require basic legal pages (Terms of Service, Privacy Policy, and Cookie Policy). The full production requirements, such as secure content management, versioning, dynamic PDF generation, and audit trails, are beyond the scope of the POC.
+   8 | 
+   9 | ## Decision
+  10 | Implement legal pages by:
+  11 | 1. Storing static markdown files in the public/legal directory.
+  12 | 2. Rendering legal content as static pages.
+  13 | 3. Keeping the implementation simple without authentication, versioning, or automated PDF generation.
+  14 | 
+  15 | ## Consequences
+  16 | - Easier and faster implementation.
+  17 | - Limited flexibility in updating legal content dynamically.
+  18 | - Suitable for a POC; additional enhancements can be applied for a full production release.
+
+END OF FILE
+
+
+///// docs\adr\0004-styling-system.md
+FILE TYPE: .md
+RELATIVE PATH: docs\adr\0004-styling-system.md
+CONTENT:
+
+   1 | # 4. Component-Based Styling System
+   2 | 
+   3 | ## Status
+   4 | Revised
+   5 | 
+   6 | ## Context
+   7 | The current styling implementation is complex for a POC, with aspirations for an atomic design system, intricate token management, and advanced performance optimizations. For a POC, such complexity is not required, and a simpler, consistent styling approach is more appropriate.
+   8 | 
+   9 | ## Decision
+  10 | Adopt a simplified styling system by:
+  11 | 1. Utilizing Tailwind CSS for utility-first styling with a basic configuration.
+  12 | 2. Defining a minimal set of design tokens (colors, spacing, typography) in a JSON file.
+  13 | 3. Avoiding over-engineered solutions such as dynamic theme generation and Figma integration.
+  14 | 4. Ensuring basic responsiveness and accessibility.
+  15 | 
+  16 | ## Consequences
+  17 | - Faster development and easier maintenance during the POC phase.
+  18 | - A simpler design system that can be extended in the future.
+  19 | - Limited styling customization until further requirements emerge.
+
+END OF FILE
+
+
+///// i18n\request.ts
+FILE TYPE: .ts
+RELATIVE PATH: i18n\request.ts
+CONTENT:
+
+   1 | import { getRequestConfig } from "next-intl/server";
+   2 | 
+   3 | export default getRequestConfig(async (params: any) => {
+   4 |   // Retrieve the locale from request headers if available
+   5 |   let currentLocale: string = "en";
+   6 |   if (params && params.request) {
+   7 |     const headers = await params.request.headers();
+   8 |     currentLocale = headers.get("x-next-intl-locale") || "en";
+   9 |   }
+  10 |   const messages = (await import(`../messages/${currentLocale}/common.json`)).default;
+  11 |   return {
+  12 |     messages,
+  13 |     timeZone: "Europe/Paris",
+  14 |     now: new Date(),
+  15 |     locale: currentLocale,
+  16 |   };
+  17 | });
+
+END OF FILE
+
+
+///// messages\en\common.json
+FILE TYPE: .json
+RELATIVE PATH: messages\en\common.json
+CONTENT:
+
+   1 | {
+   2 |     "header": {
+   3 |         "title": "Bug Identifier",
+   4 |         "description": "Upload an image of a bug for identification.",
+   5 |         "secure": "Secure and Private",
+   6 |         "fileSize": "File size limit: 4MB",
+   7 |         "supportedFormats": "Supported formats: .jpeg, .jpg, .png"
+   8 |     },
+   9 |     "results": {
+  10 |         "title": "Analysis Results",
+  11 |         "imageAlt": "Image of {species}",
+  12 |         "species": "Species",
+  13 |         "confidence": "Confidence",
+  14 |         "serviceTitle": "Get Professional Service",
+  15 |         "serviceDesc": "Contact our experts for the best pest control service.",
+  16 |         "serviceCTA": "Contact Now"
+  17 |     },
+  18 |     "footer": {
+  19 |         "service": "Professional Pest Control Service",
+  20 |         "privacy": "Privacy Policy"
+  21 |     },
+  22 |     "analyzing": "Analyzing image...",
+  23 |     "drop": "Drop the image here...",
+  24 |     "upload": "Click or drag an image to upload",
+  25 |     "errors": {
+  26 |         "notImage": "The selected file is not an image.",
+  27 |         "unidentified": "No insect species detected in the image.",
+  28 |         "generic": "An unexpected error occurred. Please try again."
+  29 |     }
+  30 | }
+
+END OF FILE
+
+
+///// messages\fr\common.json
+FILE TYPE: .json
+RELATIVE PATH: messages\fr\common.json
+CONTENT:
+
+   1 | {
+   2 |     "header": {
+   3 |         "title": "Identificateur de nuisibles",
+   4 |         "description": "Téléchargez une image d'un insecte pour l'identification.",
+   5 |         "secure": "Sûr et privé",
+   6 |         "fileSize": "Taille maximale de fichier : 4 Mo",
+   7 |         "supportedFormats": "Formats supportés : .jpeg, .jpg, .png"
+   8 |     },
+   9 |     "results": {
+  10 |         "title": "Résultats de l'analyse",
+  11 |         "imageAlt": "Image de {species}",
+  12 |         "species": "Espèce",
+  13 |         "confidence": "Confiance",
+  14 |         "serviceTitle": "Obtenez un service professionnel",
+  15 |         "serviceDesc": "Contactez nos experts pour un contrôle optimal des nuisibles.",
+  16 |         "serviceCTA": "Contactez-nous"
+  17 |     },
+  18 |     "footer": {
+  19 |         "service": "Service de contrôle des nuisibles professionnel",
+  20 |         "privacy": "Politique de confidentialité"
+  21 |     },
+  22 |     "analyzing": "Analyse de l'image en cours…",
+  23 |     "drop": "Déposez l'image ici…",
+  24 |     "upload": "Cliquez ou faites glisser une image pour télécharger",
+  25 |     "errors": {
+  26 |         "notImage": "Le fichier sélectionné n'est pas une image.",
+  27 |         "unidentified": "Aucune espèce d'insecte détectée dans l'image.",
+  28 |         "generic": "Une erreur inattendue s'est produite. Veuillez réessayer."
+  29 |     }
+  30 | }
+
+END OF FILE
+
+
+///// src\theme\ThemeProvider.tsx
+FILE TYPE: .tsx
+RELATIVE PATH: src\theme\ThemeProvider.tsx
+CONTENT:
+
+   1 | 'use client'
+   2 | 
+   3 | import { ReactNode, createContext, useContext } from 'react'
+   4 | import { twMerge } from 'tailwind-merge'
+   5 | import tokens from './tokens.json'
+   6 | import type { ThemeTokens } from './types'
+   7 | import '../../app/globals.css'
+   8 | 
+   9 | const ThemeContext = createContext<ThemeTokens>(tokens)
+  10 | 
+  11 | export function ThemeProvider({ children }: { children: ReactNode }) {
+  12 |     return (
+  13 |         <ThemeContext.Provider value={tokens}>
+  14 |             <div data-theme="light" className={twMerge('min-h-screen')}>
+  15 |                 {children}
+  16 |             </div>
+  17 |         </ThemeContext.Provider>
+  18 |     )
+  19 | }
+  20 | 
+  21 | export function useTheme() {
+  22 |     const context = useContext(ThemeContext)
+  23 |     if (!context) {
+  24 |         throw new Error('useTheme must be used within a ThemeProvider')
+  25 |     }
+  26 |     return context
+  27 | }
+
+END OF FILE
+
+
+///// src\theme\tokens.json
+FILE TYPE: .json
+RELATIVE PATH: src\theme\tokens.json
+CONTENT:
+
+   1 | {
+   2 |     "colors": {
+   3 |         "primary": {
+   4 |             "50": "#f0f9ff",
+   5 |             "100": "#e0f2fe",
+   6 |             "200": "#bae6fd",
+   7 |             "300": "#7dd3fc",
+   8 |             "400": "#38bdf8",
+   9 |             "500": "#0ea5e9",
+  10 |             "600": "#0284c7",
+  11 |             "700": "#0369a1",
+  12 |             "800": "#075985",
+  13 |             "900": "#0c4a6e"
+  14 |         },
+  15 |         "surface": {
+  16 |             "50": "#f8fafc",
+  17 |             "100": "#f1f5f9",
+  18 |             "200": "#e2e8f0",
+  19 |             "300": "#cbd5e1",
+  20 |             "400": "#94a3b8",
+  21 |             "500": "#64748b",
+  22 |             "600": "#475569",
+  23 |             "700": "#334155",
+  24 |             "800": "#1e293b",
+  25 |             "900": "#0f172a"
+  26 |         }
+  27 |     },
+  28 |     "spacing": {
+  29 |         "xs": "0.25rem",
+  30 |         "sm": "0.5rem",
+  31 |         "md": "1rem",
+  32 |         "lg": "1.5rem",
+  33 |         "xl": "2rem"
+  34 |     },
+  35 |     "radius": {
+  36 |         "sm": "4px",
+  37 |         "md": "8px",
+  38 |         "lg": "12px"
+  39 |     }
+  40 | }
+
+END OF FILE
+
+
+///// src\theme\types.d.ts
+FILE TYPE: .ts
+RELATIVE PATH: src\theme\types.d.ts
+CONTENT:
+
+   1 | export interface ThemeTokens {
+   2 |   colors: {
+   3 |     primary: {
+   4 |       "50": string;
+   5 |       "100": string;
+   6 |       "200": string;
+   7 |       "300": string;
+   8 |       "400": string;
+   9 |       "500": string;
+  10 |       "600": string;
+  11 |       "700": string;
+  12 |       "800": string;
+  13 |       "900": string;
+  14 |     };
+  15 |     surface: {
+  16 |       "50": string;
+  17 |       "100": string;
+  18 |       "200": string;
+  19 |       "300": string;
+  20 |       "400": string;
+  21 |       "500": string;
+  22 |       "600": string;
+  23 |       "700": string;
+  24 |       "800": string;
+  25 |       "900": string;
+  26 |     };
+  27 |   };
+  28 |   spacing: {
+  29 |     xs: string;
+  30 |     sm: string;
+  31 |     md: string;
+  32 |     lg: string;
+  33 |     xl: string;
+  34 |   };
+  35 |   radius: {
+  36 |     sm: string;
+  37 |     md: string;
+  38 |     lg: string;
+  39 |   };
+  40 | }
+
+END OF FILE
+
