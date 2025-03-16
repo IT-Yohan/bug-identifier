@@ -6,7 +6,7 @@ import Footer from "../components/layout/Footer";
 import DropZone from "../components/ui/DropZone";
 import AnalysisResult from "../components/ui/AnalysisResult";
 
-export default function Home() {
+export default function EnglishHome() {
     const t = useTranslations("common");
     const { result, loading, error, handleAnalysis } = useImageAnalysis();
 

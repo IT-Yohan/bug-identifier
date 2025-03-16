@@ -1,19 +1,20 @@
-# 2. Unified Error Handling
+# 2. Error Handling Strategy
 
 ## Status
-Proposed
+Accepted (Simplified for POC)
 
 ## Context
-Given the scope of our Proof-of-Concept (POC) application, our error handling strategy is intentionally simplified. The current system does not require extensive error taxonomies, resilience patterns, or monitoring integrations that are common in production-grade systems.
+Given the scope of our Proof-of-Concept (POC) application, we've implemented a straightforward error handling approach focused on user experience without the complexity of production-level error management.
 
 ## Decision
-- Implement a global error boundary to catch all errors.
-- Log errors to the console for debugging purposes.
-- Display user-friendly error messages that do not expose technical details.
-- For 404 (not found) errors, show a customized message informing users that the page was not found.
-- Provide a "Try again" option to allow basic error recovery.
+- Use component-level error handling for API requests
+- Provide localized, user-friendly error messages
+- Log errors to console for development debugging
+- Handle common scenarios (invalid file type, API failures)
+- Present clear feedback to users when errors occur
 
 ## Consequences
-- Simplified error handling reduces implementation and maintenance overhead.
-- Limited error classification and recovery strategies.
-- Not suitable for full-scale production without further enhancements.
+- Appropriate for POC demonstration purposes
+- Simple implementation with minimal overhead
+- Clear user feedback for common error scenarios
+- Would need enhancement for production use

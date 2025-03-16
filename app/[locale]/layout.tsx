@@ -1,42 +1,48 @@
-import { notFound } from 'next/navigation';
-import { Inter } from 'next/font/google';
-import { ReactNode } from 'react';
-import { locales } from '../../middleware';
-import LocaleProvider from './LocaleProvider';
+// Simplify to a pure client component that doesn't need to await params
+"use client";
 
-export const dynamic = 'force-dynamic';
-export const dynamicParams = true;
-export const revalidate = 0;
-export const fetchCache = 'force-no-store';
-export const runtime = 'nodejs';
+import { Inter } from 'next/font/google';
+import { ReactNode, useEffect } from 'react';
+import { NextIntlClientProvider } from 'next-intl';
+import { useRouter } from 'next/navigation';
+import { locales } from '../../middleware';
 
 const inter = Inter({ subsets: ['latin'] });
 
-interface LayoutProps {
+// Import messages statically to avoid async issues
+const messages = {
+    en: require('../../messages/en/common.json'),
+    fr: require('../../messages/fr/common.json')
+};
+
+interface LocaleLayoutProps {
     children: ReactNode;
     params: { locale: string };
 }
 
-export default async function LocaleLayout({ children, params }: LayoutProps) {
-    const { locale } = await params;
+export default function LocaleLayout({ children, params }: LocaleLayoutProps) {
+    const router = useRouter();
+    const locale = params.locale as string;
 
-    if (!locales.includes(locale as any)) {
-        notFound();
-    }
+    // Validate locale on client side
+    useEffect(() => {
+        if (!locales.includes(locale as any)) {
+            router.push('/en'); // Redirect to default locale
+        }
+    }, [locale, router]);
 
-    let messages;
-    try {
-        messages = (await import(`../../messages/${locale}/common.json`)).default;
-    } catch (error) {
-        console.error("Locale file not found:", locale, error);
-        notFound();
-    }
+    // Use the messages for the current locale
+    const localeMessages = messages[locale as keyof typeof messages] || messages.en;
 
     return (
-        <LocaleProvider locale={locale} messages={messages}>
+        <NextIntlClientProvider
+            locale={locale}
+            messages={{ common: localeMessages }}
+            timeZone="Europe/Paris"
+        >
             <div className={inter.className}>
                 {children}
             </div>
-        </LocaleProvider>
+        </NextIntlClientProvider>
     );
 }

@@ -1,11 +1,8 @@
 import { NextResponse } from "next/server";
-import axios from "axios";
-import { writeFile, mkdir, unlink } from 'fs/promises';
-import { join } from 'path';
-import { existsSync } from 'fs';
+import { analyzeImage, filterInsectLabels } from "../../services/vision/visionService";
+import { translateText } from "../../services/translation/translationService";
 
 export async function POST(request: Request) {
-  // Get the language from Accept-Language header (e.g., "en-US" -> "en")
   const acceptLanguage = request.headers.get('Accept-Language')?.split(',')[0] || 'en';
   const language = acceptLanguage.split('-')[0];
 
@@ -27,21 +24,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // Convert file to buffer
+    // Convert file to buffer and base64
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
-    // Create temp directory if it doesn't exist
-    const tempPath = join(process.cwd(), 'temp');
-    if (!existsSync(tempPath)) {
-      await mkdir(tempPath, { recursive: true });
-    }
-
-    const timestamp = Date.now();
-    const filePath = join(tempPath, `${timestamp}-${file.name}`);
-    await writeFile(filePath, buffer);
-
-    // Convert image to base64
     const imageBase64 = buffer.toString('base64');
 
     if (!process.env.GOOGLE_API_KEY) {
@@ -52,94 +37,37 @@ export async function POST(request: Request) {
       );
     }
 
-    // 1) Call Google Vision API
-    const visionResponse = await axios.post(
-      `https://vision.googleapis.com/v1/images:annotate?key=${process.env.GOOGLE_API_KEY}`,
-      {
-        requests: [
-          {
-            image: { content: imageBase64 },
-            features: [
-              { type: "LABEL_DETECTION", maxResults: 20 },
-              { type: "WEB_DETECTION", maxResults: 20 }
-            ],
-            // languageHints tells Vision we prefer the given language,
-            // but it often returns English-based labels anyway.
-            imageContext: {
-              languageHints: [language]
-            }
-          }
-        ]
-      }
-    );
-
-    // Process results
-    const labels = visionResponse.data.responses[0]?.labelAnnotations || [];
-    const webEntities = visionResponse.data.responses[0]?.webDetection?.webEntities || [];
-
-    // Filter for specific insects, ignoring generic "insect", "bug"
-    const insectLabels = [...labels, ...webEntities].filter((label: any) => {
-      const description = label.description.toLowerCase();
-      if (["insect", "bug", "pest"].includes(description)) {
-        return false;
-      }
-      return (
-        description.includes('beetle') ||
-        description.includes('ant') ||
-        description.includes('spider') ||
-        description.includes('roach') ||
-        description.includes('wasp') ||
-        description.includes('bee') ||
-        description.includes('moth') ||
-        description.includes('fly') ||
-        description.includes('cricket') ||
-        description.includes('termite') ||
-        description.includes('tick')
-      );
-    });
+    // Analyze the image using vision service
+    const { labels, webEntities } = await analyzeImage(imageBase64, language);
+    
+    // Filter for insect labels using the service function
+    const insectLabels = filterInsectLabels(labels, webEntities);
 
     if (insectLabels.length === 0) {
-      // Clean up temp file
-      await unlink(filePath).catch((err) => console.error("Cleanup error:", err));
       return NextResponse.json({
         identifiedAs: null,
         errorMessage: "No insect species detected in the image. Please upload a clear image of an insect."
       });
     }
 
-    // Sort by confidence
+    // Sort by confidence and get best match
     const bestMatch = insectLabels.sort(
       (a: any, b: any) => (b.score || b.confidence) - (a.score || a.confidence)
     )[0];
 
     const confidence = Math.min(Math.max(bestMatch.score || bestMatch.confidence || 0, 0), 1);
-
-    // 2) Translate the bestMatch description if needed
-    let originalDescription = bestMatch.description;
+    const originalDescription = bestMatch.description;
+    
+    // Translate if needed using translation service
     let localizedDescription = originalDescription;
-
-    // Only do translation if the user wants a language other than English
-    // (or adapt logic to your needs).
     if (language !== "en") {
       try {
-        const translationResponse = await axios.post(
-          `https://translation.googleapis.com/language/translate/v2?key=${process.env.GOOGLE_API_KEY}`,
-          {
-            q: originalDescription,
-            target: language
-          }
-        );
-        localizedDescription = translationResponse.data.data.translations[0].translatedText;
+        localizedDescription = await translateText(originalDescription, language);
       } catch (err) {
         console.error("Translation error:", err);
         // Fallback to originalDescription if translation fails
       }
     }
-
-    // Clean up the temporary file
-    await unlink(filePath).catch((err) =>
-      console.error("Error cleaning up temporary file:", err)
-    );
 
     return NextResponse.json({
       identifiedAs: localizedDescription,

@@ -1,40 +1,24 @@
 # 1. Internationalization Strategy
 
 ## Status
-Accepted
+Accepted (Simplified for POC)
 
 ## Context
-The application currently supports English/French with next-intl but has:
-- Incomplete translation coverage
-- No error message localization
-- Hardcoded UI text in components
+The application supports English/French with next-intl.
 
 ## Decision
-Implement enterprise-grade i18n with:
+Implement a simplified i18n approach appropriate for a POC:
 
-1. Advanced text handling:
-   - RTL/LTR detection and styling
-   - CLDR pluralization rules
-   - Gender-aware translations
-   
-2. Performance optimizations:
-   - CDN-hosted locale bundles
-   - Tree-shakable translation modules
-   - Brotli compression for locale files
+1. Basic multilingual support:
+   - Support for English and French
+   - JSON-based translation files
+   - Simple message formatting
 
-3. Translation infrastructure:
-   - Translation Memory (TMX 1.4b)
-   - Machine translation fallback (DeepL API)
-   - Pseudolocalization testing
-   - In-context editing (CMS integration)
-
-4. Quality assurance:
-   - Lingui eslint rules
-   - Translation coverage reports
-   - Glossary term enforcement
+2. Straightforward routing:
+   - Locale prefix in URL
+   - Default locale fallback
 
 ## Consequences
-- RTL support requires CSS logical properties
-- TM system needs 90% match threshold
-- CDN caching adds deployment complexity
-- Machine translation requires API key management
+- Simplified translation management
+- Reduced complexity in language handling
+- Appropriate for POC but would need extension for production
